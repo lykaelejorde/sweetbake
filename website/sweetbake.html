@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SweetBake Cake Shop Management System</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, sans-serif;
+}
+
+body{
+background:#fff7f8;
+}
+
+/* LOGIN PAGE */
+
+.login-page{
+width:100%;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(to right,#ffd6e0,#fff7f8);
+}
+
+.login-box{
+width:380px;
+background:white;
+padding:40px;
+border-radius:25px;
+box-shadow:0 10px 30px rgba(0,0,0,0.1);
+text-align:center;
+}
+
+.login-box h1{
+color:#ff4f81;
+font-size:40px;
+margin-bottom:10px;
+}
+
+.login-box p{
+color:gray;
+margin-bottom:25px;
+}
+
+.login-box input{
+width:100%;
+padding:14px;
+margin:10px 0;
+border:none;
+background:#f3f3f3;
+border-radius:12px;
+font-size:15px;
+}
+
+.login-box button{
+width:100%;
+padding:14px;
+background:#ff4f81;
+border:none;
+color:white;
+border-radius:12px;
+font-size:16px;
+cursor:pointer;
+transition:0.3s;
+}
+
+.login-box button:hover{
+background:#ff2465;
+}
+
+/* DASHBOARD */
+
+.dashboard{
+display:none;
+}
+
+.container{
+display:flex;
+}
+
+/* SIDEBAR */
+
+.sidebar{
+width:260px;
+height:100vh;
+background:white;
+padding:25px;
+box-shadow:0 0 15px rgba(0,0,0,0.05);
+position:fixed;
+overflow:auto;
+}
+
+.logo{
+text-align:center;
+margin-bottom:40px;
+}
+
+.logo h1{
+color:#ff4f81;
+font-size:38px;
+}
+
+.logo p{
+color:gray;
+font-size:14px;
+}
+
+.sidebar ul{
+list-style:none;
+}
+
+.sidebar ul li{
+padding:15px;
+margin:10px 0;
+border-radius:12px;
+cursor:pointer;
+transition:0.3s;
+color:#555;
+}
+
+.sidebar ul li:hover,
+.active{
+background:#ffdce6;
+color:#ff4f81;
+}
+
+/* MAIN */
+
+.main{
+margin-left:280px;
+width:100%;
+padding:30px;
+}
+
+.topbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:30px;
+}
+
+.topbar h2{
+font-size:30px;
+}
+
+.topbar span{
+color:#ff4f81;
+}
+
+.logout-btn{
+background:#ff4f81;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:10px;
+cursor:pointer;
+}
+
+.logout-btn:hover{
+background:#ff2465;
+}
+
+/* CARDS */
+
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:20px;
+margin-bottom:30px;
+}
+
+.card{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.card i{
+font-size:35px;
+color:#ff4f81;
+margin-bottom:15px;
+}
+
+.card h3{
+margin-bottom:10px;
+color:#777;
+}
+
+.card p{
+font-size:30px;
+font-weight:bold;
+}
+
+/* TABLE */
+
+.table-box{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+margin-top:20px;
+overflow:auto;
+}
+
+.table-box h2{
+margin-bottom:20px;
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+}
+
+table th,
+table td{
+padding:15px;
+text-align:left;
+}
+
+table th{
+background:#ffe6ee;
+color:#ff4f81;
+}
+
+table tr:nth-child(even){
+background:#fafafa;
+}
+
+/* CHART */
+
+.chart-box{
+background:white;
+padding:25px;
+border-radius:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+margin-top:20px;
+}
+
+/* CUSTOM CAKE */
+
+.custom-box{
+background:white;
+padding:25px;
+border-radius:20px;
+margin-top:20px;
+box-shadow:0 5px 15px rgba(0,0,0,0.08);
+}
+
+.custom-box select{
+width:100%;
+padding:12px;
+margin:10px 0;
+border-radius:10px;
+border:1px solid #ccc;
+}
+
+.section{
+animation:fade 0.5s;
+}
+
+@keyframes fade{
+
+from{
+opacity:0;
+transform:translateY(10px);
+}
+
+to{
+opacity:1;
+transform:translateY(0);
+}
+
+}
+
+@media(max-width:900px){
+
+.container{
+flex-direction:column;
+}
+
+.sidebar{
+width:100%;
+height:auto;
+position:relative;
+}
+
+.main{
+margin-left:0;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- LOGIN -->
+
+<div class="login-page" id="loginPage">
+
+<div class="login-box">
+
+<h1>SweetBake</h1>
+<p>Cake Shop Management System</p>
+
+<input type="email" id="email" placeholder="Enter Email">
+
+<input type="password" id="password" placeholder="Enter Password">
+
+<button onclick="login()">Login</button>
+
+<br><br>
+
+<p>Email: admin@gmail.com</p>
+<p>Password: admin123</p>
+
+</div>
+
+</div>
+
+<!-- DASHBOARD -->
+
+<div class="dashboard" id="dashboard">
+
+<div class="container">
+
+<!-- SIDEBAR -->
+
+<div class="sidebar">
+
+<div class="logo">
+<h1>SweetBake</h1>
+<p>Baked With Love 🧁</p>
+</div>
+
+<ul>
+
+<li onclick="showSection('dashboardSection')">
+<i class="fa fa-home"></i> Dashboard
+</li>
+
+<li onclick="showSection('ordersSection')">
+<i class="fa fa-cart-shopping"></i> Orders
+</li>
+
+<li onclick="showSection('customersSection')">
+<i class="fa fa-users"></i> Customers
+</li>
+
+<li onclick="showSection('productsSection')">
+<i class="fa fa-cake-candles"></i> Products
+</li>
+
+<li onclick="showSection('inventorySection')">
+<i class="fa fa-box"></i> Inventory
+</li>
+
+<li onclick="showSection('salesSection')">
+<i class="fa fa-chart-line"></i> Sales
+</li>
+
+<li onclick="showSection('reportsSection')">
+<i class="fa fa-file"></i> Reports
+</li>
+
+<li onclick="showSection('settingsSection')">
+<i class="fa fa-gear"></i> Settings
+</li>
+
+</ul>
+
+</div>
+
+<!-- MAIN -->
+
+<div class="main">
+
+<div class="topbar">
+
+<h2>Welcome Back, <span>SweetBake Admin 🧁</span></h2>
+
+<button class="logout-btn" onclick="logout()">
+Logout
+</button>
+
+</div>
+
+<!-- DASHBOARD SECTION -->
+
+<div id="dashboardSection" class="section">
+
+<div class="cards">
+
+<div class="card">
+<i class="fa fa-bag-shopping"></i>
+<h3>Total Orders</h3>
+<p>128</p>
+</div>
+
+<div class="card">
+<i class="fa fa-money-bill"></i>
+<h3>Total Sales</h3>
+<p>₱45,670</p>
+</div>
+
+<div class="card">
+<i class="fa fa-cake-candles"></i>
+<h3>Products</h3>
+<p>56</p>
+</div>
+
+<div class="card">
+<i class="fa fa-users"></i>
+<h3>Customers</h3>
+<p>342</p>
+</div>
+
+</div>
+
+<div class="chart-box">
+
+<h2>Sales Overview</h2>
+
+<canvas id="salesChart"></canvas>
+
+</div>
+
+</div>
+
+<!-- ORDERS -->
+
+<div id="ordersSection" class="section" style="display:none;">
+
+<div class="table-box">
+
+<h2>Orders Management</h2>
+
+<button onclick="addOrder()" class="logout-btn">
+Add Order
+</button>
+
+<br><br>
+
+<table id="ordersTable">
+
+<tr>
+<th>Order ID</th>
+<th>Customer</th>
+<th>Cake</th>
+<th>Status</th>
+</tr>
+
+<tr>
+<td>#1001</td>
+<td>Maria</td>
+<td>Chocolate Cake</td>
+<td>Completed</td>
+</tr>
+
+<tr>
+<td>#1002</td>
+<td>John</td>
+<td>Red Velvet Cake</td>
+<td>Preparing</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- CUSTOMERS -->
+
+<div id="customersSection" class="section" style="display:none;">
+
+<div class="table-box">
+
+<h2>Customers</h2>
+
+<button onclick="addCustomer()" class="logout-btn">
+Add Customer
+</button>
+
+<br><br>
+
+<table id="customerTable">
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+</tr>
+
+<tr>
+<td>1</td>
+<td>Maria</td>
+<td>maria@gmail.com</td>
+</tr>
+
+<tr>
+<td>2</td>
+<td>John</td>
+<td>john@gmail.com</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- PRODUCTS -->
+
+<div id="productsSection" class="section" style="display:none;">
+
+<div class="table-box">
+
+<h2>Cake Products</h2>
+
+<button onclick="addProduct()" class="logout-btn">
+Add Product
+</button>
+
+<br><br>
+
+<table id="productTable">
+
+<tr>
+<th>Cake Name</th>
+<th>Price</th>
+<th>Flavor</th>
+<th>Size</th>
+</tr>
+
+<tr>
+<td>Chocolate Cake</td>
+<td>₱850</td>
+<td>Chocolate</td>
+<td>8 inches</td>
+</tr>
+
+<tr>
+<td>Red Velvet Cake</td>
+<td>₱1200</td>
+<td>Red Velvet</td>
+<td>10 inches</td>
+</tr>
+
+<tr>
+<td>Black Forest Cake</td>
+<td>₱950</td>
+<td>Cherry Chocolate</td>
+<td>8 inches</td>
+</tr>
+
+<tr>
+<td>Strawberry Cake</td>
+<td>₱900</td>
+<td>Strawberry</td>
+<td>6 inches</td>
+</tr>
+
+<tr>
+<td>Vanilla Cake</td>
+<td>₱800</td>
+<td>Vanilla</td>
+<td>6 inches</td>
+</tr>
+
+<tr>
+<td>Ube Cake</td>
+<td>₱1000</td>
+<td>Ube</td>
+<td>8 inches</td>
+</tr>
+
+</table>
+
+</div>
+
+<!-- CUSTOM CAKE -->
+
+<div class="custom-box">
+
+<h2>Customize Your Own Cake 🎂</h2>
+
+<br>
+
+<label>Select Flavor:</label>
+
+<select id="flavor">
+
+<option>Chocolate</option>
+<option>Vanilla</option>
+<option>Strawberry</option>
+<option>Red Velvet</option>
+<option>Ube</option>
+
+</select>
+
+<label>Select Size:</label>
+
+<select id="size">
+
+<option>6 Inches</option>
+<option>8 Inches</option>
+<option>10 Inches</option>
+
+</select>
+
+<label>Add-ons:</label>
+
+<br><br>
+
+<input type="checkbox"> Candles
+<br>
+
+<input type="checkbox"> Flowers
+<br>
+
+<input type="checkbox"> Chocolates
+<br>
+
+<input type="checkbox"> Name Topper
+<br>
+
+<input type="checkbox"> Sprinkles
+
+<br><br>
+
+<button onclick="customCake()" class="logout-btn">
+Order Custom Cake
+</button>
+
+</div>
+
+</div>
+
+<!-- INVENTORY -->
+
+<div id="inventorySection" class="section" style="display:none;">
+
+<div class="table-box">
+
+<h2>Inventory</h2>
+
+<table>
+
+<tr>
+<th>Item</th>
+<th>Available</th>
+</tr>
+
+<tr>
+<td>Flour</td>
+<td>50kg</td>
+</tr>
+
+<tr>
+<td>Sugar</td>
+<td>30kg</td>
+</tr>
+
+<tr>
+<td>Butter</td>
+<td>20kg</td>
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- SALES -->
+
+<div id="salesSection" class="section" style="display:none;">
+
+<div class="table-box">
+
+<h2>Sales Report</h2>
+
+<p>Total Monthly Sales: ₱45,670</p>
+
+</div>
+
+</div>
+
+<!-- REPORTS -->
+
+<div id="reportsSection" class="section" style="display:none;">
+
+<div class="table-box">
+
+<h2>Reports</h2>
+
+<p>Generate reports here.</p>
+
+</div>
+
+</div>
+
+<!-- SETTINGS -->
+
+<div id="settingsSection" class="section" style="display:none;">
+
+<div class="table-box">
+
+<h2>Settings</h2>
+
+<p>System settings available here.</p>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* LOGIN */
+
+function login(){
+
+let email = document.getElementById("email").value;
+let password = document.getElementById("password").value;
+
+if(email == "admin@gmail.com" && password == "admin123"){
+
+document.getElementById("loginPage").style.display = "none";
+
+document.getElementById("dashboard").style.display = "block";
+
+}else{
+
+alert("Invalid Email or Password");
+
+}
+
+}
+
+/* LOGOUT */
+
+function logout(){
+
+document.getElementById("dashboard").style.display = "none";
+
+document.getElementById("loginPage").style.display = "flex";
+
+}
+
+/* SHOW SECTION */
+
+function showSection(sectionId){
+
+let sections = document.querySelectorAll('.section');
+
+sections.forEach(function(section){
+
+section.style.display = "none";
+
+});
+
+document.getElementById(sectionId).style.display = "block";
+
+}
+
+/* ADD ORDER */
+
+function addOrder(){
+
+let customer = prompt("Enter Customer Name:");
+let cake = prompt("Enter Cake Name:");
+let status = prompt("Enter Status:");
+
+let table = document.getElementById("ordersTable");
+
+let row = table.insertRow();
+
+row.insertCell(0).innerHTML = "#" + Math.floor(Math.random()*9999);
+
+row.insertCell(1).innerHTML = customer;
+
+row.insertCell(2).innerHTML = cake;
+
+row.insertCell(3).innerHTML = status;
+
+}
+
+/* ADD CUSTOMER */
+
+function addCustomer(){
+
+let name = prompt("Enter Customer Name:");
+let email = prompt("Enter Email:");
+
+let table = document.getElementById("customerTable");
+
+let row = table.insertRow();
+
+row.insertCell(0).innerHTML = table.rows.length - 1;
+
+row.insertCell(1).innerHTML = name;
+
+row.insertCell(2).innerHTML = email;
+
+}
+
+/* ADD PRODUCT */
+
+function addProduct(){
+
+let cake = prompt("Cake Name:");
+let price = prompt("Price:");
+let flavor = prompt("Flavor:");
+let size = prompt("Size:");
+
+let table = document.getElementById("productTable");
+
+let row = table.insertRow();
+
+row.insertCell(0).innerHTML = cake;
+
+row.insertCell(1).innerHTML = price;
+
+row.insertCell(2).innerHTML = flavor;
+
+row.insertCell(3).innerHTML = size;
+
+}
+
+/* CUSTOM CAKE */
+
+function customCake(){
+
+let flavor = document.getElementById("flavor").value;
+
+let size = document.getElementById("size").value;
+
+alert(
+
+"Custom Cake Ordered 🎂\\n\\n" +
+
+"Flavor: " + flavor +
+
+"\\nSize: " + size
+
+);
+
+}
+
+/* CHART */
+
+const ctx = document.getElementById('salesChart');
+
+new Chart(ctx, {
+
+type:'line',
+
+data:{
+
+labels:['Jan','Feb','Mar','Apr','May','Jun'],
+
+datasets:[{
+
+label:'Sales',
+
+data:[10000,15000,12000,25000,35000,45670],
+
+borderWidth:4,
+tension:0.4
+
+}]
+
+},
+
+options:{
+responsive:true
+}
+
+});
+
+</script>
+
+</body>
+</html>
